@@ -8,7 +8,10 @@ namespace Config {
         //TFM version
         define('VERSION', '2.4.3');
         //Application Title
-        define('APP_TITLE', 'Tiny File Manager');
+        define('APP_TITLE', 'Gestor de Archivos');
+
+        //  Login Image
+        define('LOGIN_IMAGE_PATH', 'sample_logo.png');
 
         // --- EDIT BELOW CAREFULLY OR DO NOT EDIT AT ALL ---
 
@@ -16,6 +19,11 @@ namespace Config {
         define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
 
         define('FM_THEME', $theme);
+
+        define('APP_HOMEPAGE', 'http://example.com/');
+
+        //  Modes to display files: table|grid
+        define('DISPLAY_MODE', 'table');
 
         // private key and session name to store to the session
         if (!defined('FM_SESSION_ID')) {
@@ -263,6 +271,187 @@ namespace Utils\Http {
 
     function sanitize_request()
     {
-        $_POST = array_map("trim", $_POST);
+        $_POST["fm_usr"] = strtolower(trim($_POST["fm_usr"]));
+    }
+}
+
+namespace Utils\Icons {
+    /**
+     * Get CSS classname for file
+     * @param string $path
+     * @return string
+     */
+    function fm_get_file_icon_class($path)
+    {
+        // get extension
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        switch ($ext) {
+            case 'ico':
+            case 'gif':
+            case 'jpg':
+            case 'jpeg':
+            case 'jpc':
+            case 'jp2':
+            case 'jpx':
+            case 'xbm':
+            case 'wbmp':
+            case 'png':
+            case 'bmp':
+            case 'tif':
+            case 'tiff':
+            case 'svg':
+                $img = 'fa fa-picture-o';
+                break;
+            case 'passwd':
+            case 'ftpquota':
+            case 'sql':
+            case 'js':
+            case 'json':
+            case 'sh':
+            case 'config':
+            case 'twig':
+            case 'tpl':
+            case 'md':
+            case 'gitignore':
+            case 'c':
+            case 'cpp':
+            case 'cs':
+            case 'py':
+            case 'map':
+            case 'lock':
+            case 'dtd':
+                $img = 'fa fa-file-code-o';
+                break;
+            case 'txt':
+            case 'ini':
+            case 'conf':
+            case 'log':
+            case 'htaccess':
+                $img = 'fa fa-file-text-o';
+                break;
+            case 'css':
+            case 'less':
+            case 'sass':
+            case 'scss':
+                $img = 'fa fa-css3';
+                break;
+            case 'zip':
+            case 'rar':
+            case 'gz':
+            case 'tar':
+            case '7z':
+                $img = 'fa fa-file-archive-o';
+                break;
+            case 'php':
+            case 'php4':
+            case 'php5':
+            case 'phps':
+            case 'phtml':
+                $img = 'fa fa-code';
+                break;
+            case 'htm':
+            case 'html':
+            case 'shtml':
+            case 'xhtml':
+                $img = 'fa fa-html5';
+                break;
+            case 'xml':
+            case 'xsl':
+                $img = 'fa fa-file-excel-o';
+                break;
+            case 'wav':
+            case 'mp3':
+                $img = 'fa fa-headphones';
+                break;
+            case 'mp2':
+            case 'm4a':
+            case 'aac':
+            case 'ogg':
+            case 'oga':
+            case 'wma':
+            case 'mka':
+            case 'flac':
+            case 'ac3':
+            case 'tds':
+                $img = 'fa fa-music';
+                break;
+            case 'm3u':
+            case 'm3u8':
+            case 'pls':
+            case 'cue':
+                $img = 'fa fa-headphones';
+                break;
+            case 'avi':
+            case 'mpg':
+            case 'mpeg':
+            case 'mp4':
+            case 'm4v':
+            case 'flv':
+            case 'f4v':
+            case 'ogm':
+            case 'ogv':
+            case 'mov':
+            case 'mkv':
+            case '3gp':
+            case 'asf':
+            case 'wmv':
+                $img = 'fa fa-file-video-o';
+                break;
+            case 'eml':
+            case 'msg':
+                $img = 'fa fa-envelope-o';
+                break;
+            case 'xls':
+            case 'xlsx':
+            case 'ods':
+                $img = 'fa fa-file-excel-o';
+                break;
+            case 'csv':
+                $img = 'fa fa-file-text-o';
+                break;
+            case 'bak':
+                $img = 'fa fa-clipboard';
+                break;
+            case 'doc':
+            case 'docx':
+            case 'odt':
+                $img = 'fa fa-file-word-o';
+                break;
+            case 'ppt':
+            case 'pptx':
+                $img = 'fa fa-file-powerpoint-o';
+                break;
+            case 'ttf':
+            case 'ttc':
+            case 'otf':
+            case 'woff':
+            case 'woff2':
+            case 'eot':
+            case 'fon':
+                $img = 'fa fa-font';
+                break;
+            case 'pdf':
+                $img = 'fa fa-file-pdf-o';
+                break;
+            case 'psd':
+            case 'ai':
+            case 'eps':
+            case 'fla':
+            case 'swf':
+                $img = 'fa fa-file-image-o';
+                break;
+            case 'exe':
+            case 'msi':
+                $img = 'fa fa-file-o';
+                break;
+            case 'bat':
+                $img = 'fa fa-terminal';
+                break;
+            default:
+                $img = 'fa fa-info-circle';
+        }
+
+        return $img;
     }
 }
