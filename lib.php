@@ -6,7 +6,7 @@ namespace Config {
         global $max_upload_size_bytes, $theme;
         //  CONSTANT DEFINITION
         //  Override default configuration
-        define('USE_CUSTOM_CONFIG', false);
+        define('USE_CUSTOM_CONFIG', true);
         //TFM version
         define('VERSION', '2.4.3');
         //Application Title

@@ -4,7 +4,9 @@
 Config\set_default_configuration();
 
 if(defined("USE_CUSTOM_CONFIG") && USE_CUSTOM_CONFIG === true) {
-    Config\override_configuration();
+    if(file_exists("config.php")) {
+        Config\override_configuration();
+    }
 }
 
 Config\define_global_variables();
