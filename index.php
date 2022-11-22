@@ -2,6 +2,7 @@
 @include_once("lib.php");
 
 Config\set_default_configuration();
+Config\set_constants();
 
 if(defined("USE_CUSTOM_CONFIG") && USE_CUSTOM_CONFIG === true) {
     if(file_exists("config.php")) {
@@ -10,7 +11,7 @@ if(defined("USE_CUSTOM_CONFIG") && USE_CUSTOM_CONFIG === true) {
 }
 
 Config\define_global_variables();
-Config\set_constants();
+Config\set_global_var_constants();
 
 Utils\Http\sanitize_request();
 
