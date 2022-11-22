@@ -3,7 +3,6 @@
 namespace Config {
     function set_constants()
     {
-        global $max_upload_size_bytes, $theme;
         //  CONSTANT DEFINITION
         //  Override default configuration
         define('USE_CUSTOM_CONFIG', true);
@@ -17,11 +16,6 @@ namespace Config {
 
         // --- EDIT BELOW CAREFULLY OR DO NOT EDIT AT ALL ---
 
-        // max upload file size
-        define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
-
-        define('FM_THEME', $theme);
-
         define('APP_HOMEPAGE', 'http://example.com/');
 
         //  Modes to display files: table|grid
@@ -31,6 +25,15 @@ namespace Config {
         if (!defined('FM_SESSION_ID')) {
             define('FM_SESSION_ID', 'filemanager');
         }
+    }
+
+    function set_global_var_constants()
+    {
+        global $max_upload_size_bytes, $theme;
+        // max upload file size
+        define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
+
+        define('FM_THEME', $theme);
     }
 
     function set_default_configuration()
