@@ -275,6 +275,23 @@ namespace Utils\Http {
     }
 }
 
+namespace Utils\Files {
+    /**
+     * Returns a file extension using its path
+     * @param string path
+     * @return string
+     */
+    function get_file_extension($path) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if($ext && !empty($ext)) {
+            return $ext;
+        } else {
+            return "";
+        }
+    }
+}
+
 namespace Utils\Icons {
     /**
      * Get CSS classname for file
