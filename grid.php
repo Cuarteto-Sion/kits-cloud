@@ -66,6 +66,8 @@
         foreach($files as $f) {
             $img = $is_link ? 'fa fa-file-text-o' : Utils\Icons\fm_get_file_icon_class($path . '/' . $f);
             $filelink = '?p=' . urlencode(FM_PATH) . '&amp;view=' . urlencode($f);
+            $fileext = Utils\Files\get_file_extension($f);
+            $file_url = FM_ROOT_URL . fm_convert_win((FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f);
     ?>
         <a class="card" href="<?php echo $filelink ?>" title="<?php echo $f ?>">
             <div class="card-body"><p><i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?></p></div>

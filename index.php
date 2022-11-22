@@ -2,7 +2,10 @@
 @include_once("lib.php");
 
 Config\set_default_configuration();
-Config\override_configuration();
+
+if(defined("USE_CUSTOM_CONFIG") && USE_CUSTOM_CONFIG === true) {
+    Config\override_configuration();
+}
 
 Config\define_global_variables();
 Config\set_constants();

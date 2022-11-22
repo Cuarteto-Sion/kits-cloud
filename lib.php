@@ -5,6 +5,8 @@ namespace Config {
     {
         global $max_upload_size_bytes, $theme;
         //  CONSTANT DEFINITION
+        //  Override default configuration
+        define('USE_CUSTOM_CONFIG', false);
         //TFM version
         define('VERSION', '2.4.3');
         //Application Title
@@ -272,6 +274,23 @@ namespace Utils\Http {
     function sanitize_request()
     {
         $_POST["fm_usr"] = strtolower(trim($_POST["fm_usr"]));
+    }
+}
+
+namespace Utils\Files {
+    /**
+     * Returns a file extension using its path
+     * @param string path
+     * @return string
+     */
+    function get_file_extension($path) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if($ext && !empty($ext)) {
+            return $ext;
+        } else {
+            return "";
+        }
     }
 }
 
