@@ -16,11 +16,16 @@ or
 // Is independent from IP white- and blacklisting
 $GLOBALS["use_auth"] = true;
 
+//  Display Mode (table/grid)
+$GLOBALS["display_mode"] = "table";
+
 $GLOBALS["login_image_path"] = "sample_logo.png";
 
 $GLOBALS["app_title"] = "Tab Title";
 
 $GLOBALS["login_text"] = "Inicio de Sesión";
+
+$GLOBALS["footer_text"] = "Todos los derechos reservados";
 
 // Login user name and password
 // Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
