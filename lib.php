@@ -1,48 +1,61 @@
 <?php
 
 namespace Config {
-    function set_constants()
+    function set_global_var_constants()
     {
-        //  CONSTANT DEFINITION
-        //  Override default configuration
-        define('USE_CUSTOM_CONFIG', true);
+        global $max_upload_size_bytes, $theme, $base_url, $site_metadata, 
+            $login_image_path, $app_title, $display_mode, $app_homepage, $favicon_path,
+            $login_text, $footer_text, $content_path;
+        // max upload file size
+        define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
+
+        define('FM_THEME', $theme);
+
+        define('BASE_URL', $base_url);
+
+        define('SITE_METADATA', $site_metadata);
+
+        //  Login Image
+        define('LOGIN_IMAGE_PATH', $login_image_path);
+
         //TFM version
         define('VERSION', '2.4.3');
         //Application Title
-        define('APP_TITLE', 'Gestor de Archivos');
-
-        //  Login Image
-        define('LOGIN_IMAGE_PATH', 'sample_logo.png');
+        define('APP_TITLE', $app_title);
 
         // --- EDIT BELOW CAREFULLY OR DO NOT EDIT AT ALL ---
 
-        define('APP_HOMEPAGE', 'http://example.com/');
+        define('APP_HOMEPAGE', $app_homepage);
 
         //  Modes to display files: table|grid
-        define('DISPLAY_MODE', 'table');
+        define('DISPLAY_MODE', $display_mode);
 
         // private key and session name to store to the session
         if (!defined('FM_SESSION_ID')) {
             define('FM_SESSION_ID', 'filemanager');
         }
-    }
 
-    function set_global_var_constants()
-    {
-        global $max_upload_size_bytes, $theme;
-        // max upload file size
-        define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
+        define('FAVICON_PATH', $favicon_path);
 
-        define('FM_THEME', $theme);
+        define('LOGIN_TEXT', $login_text);
+
+        define('FOOTER_TEXT', $footer_text);
+
+        define('CONTENT_PATH', $content_path);
     }
 
     function set_default_configuration()
-    {
+    {  
         global $CONFIG, $use_auth, $auth_users, $theme, $readonly_users, $use_highlightjs,
             $highlightjs_style, $edit_files, $default_timezone, $root_path, $root_url, $http_host,
             $directories_users, $iconv_input_encoding, $datetime_format, $allowed_file_extensions,
             $allowed_upload_extensions, $favicon_path, $online_viewer, $sticky_navbar,
-            $exclude_items, $max_upload_size_bytes, $ip_ruleset, $ip_silent, $ip_whitelist, $ip_blacklist;
+            $exclude_items, $max_upload_size_bytes, $ip_ruleset, $ip_silent, $ip_whitelist, $ip_blacklist,
+            $site_metadata, $base_url, $login_image_path, $use_custom_config, $app_title,
+            $display_mode, $app_homepage, $login_text, $footer_text, $content_path;
+
+        //  Use Custom Config
+        $use_custom_config = true;
 
         //Default Configuration
         $CONFIG = '{"lang":"es","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":true}';
@@ -55,6 +68,41 @@ namespace Config {
 
         // --- EDIT BELOW CONFIGURATION CAREFULLY ---
 
+        //  Base URL
+        $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        $content_path = "content";
+
+        //  Application Title
+        $app_title = "Gestor de Kits de Ensayo";
+        
+        //  Login Text
+        $login_text = "Inicio de Sesión";
+        
+        //  Footer Text
+        $footer_text = "Cuarteto Sion 2022";
+        
+        //  Login Image Path
+        $login_image_path = $base_url . "sample_logo.png";
+
+        //  Application Homepage
+        $app_homepage = $base_url;
+
+        //  Display Mode (table|grid)
+        $display_mode = "table";
+        
+        //  Open Graph Variables
+        $site_metadata = array(
+            "viewport" => "width=device-width, initial-scale=1, shrink-to-fit=no",
+            "description" => "Gestor de Kits de Ensayo",
+            "author" => "Oliver Montalvan",
+            "robots" => "noindex, nofollow",
+            "googlebot" => "noindex",
+            "og:title" => $app_title,
+            "og:description" => "Gestor de Kits de Ensayo",
+            "og:image" => $login_image_path
+        );
+        
         // Auth with login/password 
         // set true/false to enable/disable it
         // Is independent from IP white- and blacklisting
@@ -94,7 +142,7 @@ namespace Config {
 
         // Root path for file manager
         // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-        $root_path = $_SERVER["DOCUMENT_ROOT"] . "/content";
+        $root_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . $content_path;
 
         // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
         // Will not working if $root_path will be outside of server document root
@@ -106,8 +154,8 @@ namespace Config {
         // user specific directories
         // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
         $directories_users = array(
-            "admin" => "content",
-            "user" => "content/public"
+            "admin" => $content_path,
+            "user" => $content_path . "/public"
         );
 
         // input encoding for iconv
@@ -128,7 +176,7 @@ namespace Config {
         // Favicon path. This can be either a full url to an .PNG image, or a path based on the document root.
         // full path, e.g http://example.com/favicon.png
         // local path, e.g images/icons/favicon.png
-        $favicon_path = '?img=favicon';
+        $favicon_path = $base_url . 'sample_logo.png';
 
         // Files and folders to excluded from listing
         // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
@@ -171,21 +219,10 @@ namespace Config {
             '0.0.0.0',      // non-routable meta ipv4
             '::'            // non-routable meta ipv6
         );
-    }
 
-    function override_configuration()
-    {
-        // if User has the customized config file, try to use it to override the default config above
-        $config_file = './config.php';
-        if (is_readable($config_file)) {
-            @include($config_file);
-        }
-    }
-
-    function define_global_variables()
-    {
+        //  WARNING: DEPENDANT GLOBAL VARIABLES
         global $cfg, $lang, $show_hidden_files, $report_errors, $hide_Cols, $calc_folder, 
-            $lang_list;
+        $lang_list;
         // Configuration
         $cfg = new FM_Config();
 
@@ -216,6 +253,23 @@ namespace Config {
         } else {
             @ini_set('error_reporting', E_ALL);
             @ini_set('display_errors', 0);
+        }    
+        //  WARNING: DEPENDANT GLOBAL VARIABLES    
+    }
+
+    function override_configuration()
+    {
+        // if User has the customized config file, try to use it to override the default config above
+        $config_file = './config.php';
+        if (is_readable($config_file)) {
+            @include($config_file);
+        }
+    }
+
+    function check_content_dir()
+    {
+        if(!file_exists(CONTENT_PATH)){
+            mkdir(CONTENT_PATH, 0777, true);
         }
     }
 

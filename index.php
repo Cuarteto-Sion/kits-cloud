@@ -1,17 +1,15 @@
 <?php
+global $use_custom_config;
 @include_once("lib.php");
 
 Config\set_default_configuration();
-Config\set_constants();
 
-if(defined("USE_CUSTOM_CONFIG") && USE_CUSTOM_CONFIG === true) {
-    if(file_exists("config.php")) {
-        Config\override_configuration();
-    }
+if($use_custom_config === true) { 
+    Config\override_configuration(); 
 }
 
-Config\define_global_variables();
 Config\set_global_var_constants();
+Config\check_content_dir();
 
 Utils\Http\sanitize_request();
 
@@ -55,7 +53,7 @@ if ($use_auth) {
                                             <img src="<?= LOGIN_IMAGE_PATH ?>" />
                                         </div>
                                         <div class="text-center">
-                                            <h1 class="card-title"><?php echo APP_TITLE; ?></h1>
+                                            <h1 class="card-title"><?= LOGIN_TEXT ?></h1>
                                         </div>
                                     </div>
                                     <hr />
@@ -84,7 +82,7 @@ if ($use_auth) {
                         <?php if (defined("APP_HOMEPAGE") && !empty(APP_HOMEPAGE)) : ?>
                             <div class="footer text-center">
                                 &mdash;&mdash; &copy;
-                                <a href="<?= APP_HOMEPAGE ?>" target="_blank" class="text-muted" data-version="<?php echo VERSION; ?>"><?= APP_TITLE ?></a>
+                                <a href="<?= APP_HOMEPAGE ?>" target="_blank" class="text-muted" data-version="<?php echo VERSION; ?>"><?= FOOTER_TEXT ?></a>
                                 &mdash;&mdash;
                             </div>
                         <?php endif; ?>
@@ -2715,7 +2713,7 @@ function fm_show_header_login()
     header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
     header("Pragma: no-cache");
 
-    global $lang, $root_url, $favicon_path;
+    global $lang, $root_url, $favicon_path, $site_metadata;
 ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -2731,11 +2729,9 @@ function fm_show_header_login()
   		gtag('config', 'UA-188045961-1');
 	</script>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Almacen de kits de Cuarteto Sion">
-        <meta name="author" content="Oliver Montalvan Morales">
-        <meta name="robots" content="noindex, nofollow">
-        <meta name="googlebot" content="noindex">
+        <?php foreach(array_keys($site_metadata) as $og_variable) { ?>
+            <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
+        <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
         <title><?php echo fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -2887,7 +2883,7 @@ function fm_show_header_login()
         header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
         header("Pragma: no-cache");
 
-        global $lang, $root_url, $sticky_navbar, $favicon_path;
+        global $lang, $root_url, $sticky_navbar, $favicon_path, $site_metadata;
         $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
 ?>
     <!DOCTYPE html>
@@ -2904,11 +2900,9 @@ function fm_show_header_login()
 		gtag('config', 'UA-188045961-1');
 	</script>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Web based File Manager in PHP, Manage your files efficiently and easily with Tiny File Manager">
-        <meta name="author" content="CCP Programmers">
-        <meta name="robots" content="noindex, nofollow">
-        <meta name="googlebot" content="noindex">
+        <?php foreach(array_keys($site_metadata) as $og_variable) { ?>
+            <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
+        <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
         <title><?php echo fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -4499,13 +4493,7 @@ function fm_show_header_login()
     function fm_get_images()
     {
         return array(
-            'favicon' => 'Qk04AgAAAAAAADYAAAAoAAAAEAAAABAAAAABABAAAAAAAAICAAASCwAAEgsAAAAAAAAAAAAAIQQhBCEEIQQhBCEEIQQhBCEEIQ
-        QhBCEEIQQhBCEEIQQhBCEEIQQhBHNO3n/ef95/vXetNSEEIQQhBCEEIQQhBCEEIQQhBCEEc07ef95/3n/ef95/1lohBCEEIQQhBCEEIQQhBCEEIQ
-        RzTt5/3n8hBDFG3n/efyEEIQQhBCEEIQQhBCEEIQQhBHNO3n/efyEEMUbef95/IQQhBCEEIQQhBCEEIQQhBCEErTVzTnNOIQQxRt5/3n8hBCEEIQ
-        QhBCEEIQQhBCEEIQQhBCEEIQQhBDFG3n/efyEEIQQhBCEEIQQhBCEEIQQhBCEEIQQxRt5/3n+cc2stIQQhBCEEIQQhBCEEIQQhBCEEIQQIIZxz3n
-        /ef5xzay0hBCEEIQQhBCEEIQQhBCEEIQQhBCEEIQQhBDFG3n/efyEEIQQhBCEEIQQhBCEEIQQhBK01c05zTiEEMUbef95/IQQhBCEEIQQhBCEEIQ
-        QhBCEEc07ef95/IQQxRt5/3n8hBCEEIQQhBCEEIQQhBCEEIQRzTt5/3n8hBDFG3n/efyEEIQQhBCEEIQQhBCEEIQQhBKUUOWfef95/3n/ef95/IQ
-        QhBCEEIQQhBCEEIQQhBCEEIQQhBJRW3n/ef95/3n8hBCEEIQQhBCEEIQQhBCEEIQQhBCEEIQQhBCEEIQQhBCEEIQQhBCEEIQQAAA=='
+            'favicon' => FAVICON_PATH
         );
     }
 
