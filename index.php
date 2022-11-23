@@ -1636,27 +1636,6 @@ fm_show_footer();
 // Functions
 
 /**
- * Check if the filename is allowed.
- * @param string $filename
- * @return bool
- */
-function fm_is_file_allowed($filename)
-{
-    // By default, no file is allowed
-    $allowed = false;
-
-    if (FM_EXTENSION) {
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-        if (in_array($ext, explode(',', strtolower(FM_EXTENSION)))) {
-            $allowed = true;
-        }
-    }
-
-    return $allowed;
-}
-
-/**
  * Delete  file or folder (recursively)
  * @param string $path
  * @return bool
@@ -1980,20 +1959,6 @@ function fm_get_size($file)
         $cmd = ($iswin) ? "for %F in (\"$file\") do @echo %~zF" : ($isdarwin ? "stat -f%z $arg" : "stat -c%s $arg");
         @exec($cmd, $output);
         if (is_array($output) && ctype_digit($size = trim(implode("\n", $output)))) {
-            return $size;
-        }
-    }
-
-    // try the Windows COM interface
-    if ($iswin && class_exists("COM")) {
-        try {
-            $fsobj = new COM('Scripting.FileSystemObject');
-            $f = $fsobj->GetFile(realpath($file));
-            $size = $f->Size;
-        } catch (Exception $e) {
-            $size = null;
-        }
-        if (ctype_digit($size)) {
             return $size;
         }
     }
@@ -2496,10 +2461,7 @@ class FM_Zipper_Tar
 {
     private $tar;
 
-    public function __construct()
-    {
-        $this->tar = null;
-    }
+    public function __construct( ){ }
 
     /**
      * Create archive with name $filename and files $files (RELATIVE PATHS!)
@@ -2523,24 +2485,6 @@ class FM_Zipper_Tar
             }
             return false;
         }
-    }
-
-    /**
-     * Extract archive $filename to folder $path (RELATIVE OR ABSOLUTE PATHS)
-     * @param string $filename
-     * @param string $path
-     * @return bool
-     */
-    public function unzip($filename, $path)
-    {
-        $res = $this->tar->open($filename);
-        if ($res !== true) {
-            return false;
-        }
-        if ($this->tar->extractTo($path)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -2913,7 +2857,7 @@ function fm_show_header_login()
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
         <?php if (FM_USE_HIGHLIGHTJS) : ?>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/<?php echo FM_HIGHLIGHTJS_STYLE || "vs" ?>.min.css">
         <?php endif; ?>
         <style>
             body {
