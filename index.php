@@ -1,11 +1,15 @@
 <?php
-global $use_custom_config;
+global $use_custom_config, $force_https;
 @include_once("lib.php");
 
 Config\set_default_configuration();
 
 if($use_custom_config === true) { 
     Config\override_configuration(); 
+}
+
+if($force_https === true) {
+    Utils\Http\force_https();
 }
 
 Config\set_global_var_constants();

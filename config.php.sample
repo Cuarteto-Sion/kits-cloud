@@ -16,6 +16,9 @@ or
 // Is independent from IP white- and blacklisting
 $GLOBALS["use_auth"] = true;
 
+//  Force https
+$GLOBALS["force_https"] = true;
+
 //  Display Mode (table/grid)
 $GLOBALS["display_mode"] = "table";
 

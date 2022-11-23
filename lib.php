@@ -52,10 +52,13 @@ namespace Config {
             $allowed_upload_extensions, $favicon_path, $online_viewer, $sticky_navbar,
             $exclude_items, $max_upload_size_bytes, $ip_ruleset, $ip_silent, $ip_whitelist, $ip_blacklist,
             $site_metadata, $base_url, $login_image_path, $use_custom_config, $app_title,
-            $display_mode, $app_homepage, $login_text, $footer_text, $content_path;
+            $display_mode, $app_homepage, $login_text, $footer_text, $content_path, $force_https;
 
         //  Use Custom Config
         $use_custom_config = true;
+
+        //  Force users to use HTTPS
+        $force_https = true;
 
         //Default Configuration
         $CONFIG = '{"lang":"es","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":true}';
@@ -331,6 +334,16 @@ namespace Utils\Http {
     function sanitize_request()
     {
         $_POST["fm_usr"] = strtolower(trim($_POST["fm_usr"]));
+    }
+
+    function force_https()
+    {
+        if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+            $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            header('HTTP/1.1 301 Moved Permanently');
+            header('Location: ' . $location);
+            exit;
+        }
     }
 }
 
