@@ -52,20 +52,25 @@ $song = array(
         let source = null;
         let track = null;
         let trackSource = null;
+        let trackConnected = false;
         $(document).ready(async () => {
 
-            $("video").on("play", async () => {
+            $("#mediaElement").on("play", async () => {
                 console.log("Play");
+                const currentTime = document.getElementById("mediaElement").currentTime;
 
-                if (audioCtx !== null) {
-                    return;
-                }
-                
                 //  Create audio-related settings
                 //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                audioCtx = new AudioContext();
+                
+                if(!audioCtx) {
+                    audioCtx = new AudioContext();
+                }
+                
                 mediaElement = document.getElementById("mediaElement");
-                source = audioCtx.createMediaElementSource(mediaElement);
+
+                if(!source) {
+                    source = audioCtx.createMediaElementSource(mediaElement);
+                }
 
                 const response = await fetch('<?= $song["tracks"][0] ?>');
                 const arrayBuffer = await response.arrayBuffer();
@@ -76,12 +81,24 @@ $song = array(
                     audioCtx.resume();
                 }
 
+                if(trackSource) {
+                    trackSource.disconnect();
+                    trackSource.stop(0);
+                    trackSource = null;
+                }
+
                 trackSource = new AudioBufferSourceNode(audioCtx, {
                     buffer: track
                 });
 
                 trackSource.connect(audioCtx.destination);
-                trackSource.start();
+                trackConnected = true;
+
+                if(currentTime > 0) {
+                    trackSource.start(0, currentTime);
+                } else {
+                    trackSource.start();
+                }
             });
 
             //  Fetch lyrics
