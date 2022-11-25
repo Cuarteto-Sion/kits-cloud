@@ -3,7 +3,7 @@ $song = array(
     "title" => "Arquitecto Divino",
     "artist" => "Heraldos del Rey",
     "lyrics" => "content/lyrics.json",
-    "tracks" => array("content/tenor2.mp3")
+    "tracks" => array("content/tenor2.mp3", "content/_221117124309.mp3")
 );
 ?>
 
@@ -35,7 +35,7 @@ $song = array(
                 </a>
             </div>
             <div class="bottom">
-                <video controls="" _autoplay="" name="media">
+                <video controls="" _autoplay="" name="media" id="mediaElement">
                     <source src="<?= $song["tracks"][0] ?>" type="audio/mpeg">
                 </video>
             </div>
@@ -47,7 +47,43 @@ $song = array(
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sass.js/0.9.2/sass.min.js" integrity="sha512-mA5b7w9mZvGLWgjIqp9KhWNzkkZ/H3gC4Ua6GOn9m/xl1UF4ghH8GsriKvAYxLsxoKvn6NdebW7kZ6iGB3CGSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        let audioCtx = null;
+        let mediaElement = null;
+        let source = null;
+        let track = null;
+        let trackSource = null;
         $(document).ready(async () => {
+
+            $("video").on("play", async () => {
+                console.log("Play");
+
+                if (audioCtx !== null) {
+                    return;
+                }
+                
+                //  Create audio-related settings
+                //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                audioCtx = new AudioContext();
+                mediaElement = document.getElementById("mediaElement");
+                source = audioCtx.createMediaElementSource(mediaElement);
+
+                const response = await fetch('<?= $song["tracks"][0] ?>');
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                track = audioBuffer;
+
+                if (audioCtx.state === "suspended") {
+                    audioCtx.resume();
+                }
+
+                trackSource = new AudioBufferSourceNode(audioCtx, {
+                    buffer: track
+                });
+
+                trackSource.connect(audioCtx.destination);
+                trackSource.start();
+            });
+
             //  Fetch lyrics
             let _data = await $.getJSON('<?= $song["lyrics"] ?>');
 
