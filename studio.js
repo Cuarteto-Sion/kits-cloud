@@ -5,7 +5,7 @@ $(document).ready(async () => {
         //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         if (!audioCtx) {
-            audioCtx = new AudioContext();
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
         mediaElement = document.getElementById("mediaElement");
@@ -59,6 +59,14 @@ $(document).ready(async () => {
                 document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
             }, 1000);
 
+            buffers[e].addEventListener("ended", () => "" /*clearInterval(intervalListener)*/);
+        }
+    });
+
+    $("#mediaElement").on("pause", async () => {
+        if(audioCtx) {
+            audioCtx.suspend();
+            clearInterval(intervalListener);
         }
     });
 
