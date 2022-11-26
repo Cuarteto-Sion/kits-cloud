@@ -1,8 +1,6 @@
 $(document).ready(async () => {
 
     $("#mediaElement").on("play", async () => {
-        console.log("Play");
-
         //  Create audio-related settings
         //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -29,8 +27,6 @@ $(document).ready(async () => {
         const currentTime = document.getElementById("mediaElement").currentTime;
 
         for (let e of Object.keys(tracks)) {
-            console.log( e );
-            console.log( tracks );
             if (audioCtx.state === "suspended") {
                 audioCtx.resume();
             }
@@ -60,7 +56,6 @@ $(document).ready(async () => {
             }
 
             intervalListener = window.setInterval(() => {
-                console.log(currentTime + 1)
                 document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
             }, 1000);
 
