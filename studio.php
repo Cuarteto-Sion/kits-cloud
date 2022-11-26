@@ -50,67 +50,81 @@ $song = array(
         let audioCtx = null;
         let mediaElement = null;
         let source = null;
-        let track = null;
+        let tracks = {};
         let trackSource = null;
         let trackConnected = false;
         let intervalListener = null;
+        let buffers = {};
         $(document).ready(async () => {
+
+            let resources;
+            <?= "resources = ['" . join("', '", $song["tracks"]) . "']" ?>
 
             $("#mediaElement").on("play", async () => {
                 console.log("Play");
 
                 //  Create audio-related settings
                 //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                if(!audioCtx) {
+
+                if (!audioCtx) {
                     audioCtx = new AudioContext();
                 }
-                
+
                 mediaElement = document.getElementById("mediaElement");
 
-                if(!source) {
+                if (!source) {
                     source = audioCtx.createMediaElementSource(mediaElement);
                 }
 
-                const response = await fetch('<?= $song["tracks"][0] ?>');
-                const arrayBuffer = await response.arrayBuffer();
-                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                track = audioBuffer;
+                if( Object.keys(tracks).length === 0 ) {
+                    for (let e of resources) {
+
+                        const response = await fetch(e);
+                        const arrayBuffer = await response.arrayBuffer();
+                        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                        tracks[e] = audioBuffer;
+                    }
+                }
 
                 const currentTime = document.getElementById("mediaElement").currentTime;
 
-                if (audioCtx.state === "suspended") {
-                    audioCtx.resume();
+                for (let e of Object.keys(tracks)) {
+                    console.log( e );
+                    console.log( tracks );
+                    if (audioCtx.state === "suspended") {
+                        audioCtx.resume();
+                    }
+
+                    if (buffers[e]) {
+                        buffers[e].disconnect();
+                        buffers[e].stop(0);
+                        buffers[e] = null;
+                    }
+
+                    buffers[e] = new AudioBufferSourceNode(audioCtx, {
+                        buffer: tracks[e]
+                    });
+
+                    buffers[e].connect(audioCtx.destination);
+                    trackConnected = true;
+
+                    if (currentTime > 0) {
+                        buffers[e].start(0, currentTime);
+                    } else {
+                        buffers[e].start();
+                    }
+
+                    if (intervalListener) {
+                        clearInterval(intervalListener);
+                        intervalListener = null;
+                    }
+
+                    intervalListener = window.setInterval(() => {
+                        console.log(currentTime + 1)
+                        document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
+                    }, 1000);
+
                 }
-
-                if(trackSource) {
-                    trackSource.disconnect();
-                    trackSource.stop(0);
-                    trackSource = null;
-                }
-
-                trackSource = new AudioBufferSourceNode(audioCtx, {
-                    buffer: track
-                });
-
-                trackSource.connect(audioCtx.destination);
-                trackConnected = true;
-
-                if(currentTime > 0) {
-                    trackSource.start(0, currentTime);
-                } else {
-                    trackSource.start();
-                }
-
-                if(intervalListener) {
-                    clearInterval(intervalListener);
-                    intervalListener = null;
-                }
-
-                intervalListener = window.setInterval(() => {
-                    console.log( currentTime + 1 )
-                    document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
-                }, 1000);
             });
 
             //  Fetch lyrics
