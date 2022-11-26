@@ -58,8 +58,6 @@ $(document).ready(async () => {
             intervalListener = window.setInterval(() => {
                 document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
             }, 1000);
-
-            buffers[e].addEventListener("ended", () => "" /*clearInterval(intervalListener)*/);
         }
     });
 
