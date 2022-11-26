@@ -58,7 +58,6 @@ $song = array(
 
             $("#mediaElement").on("play", async () => {
                 console.log("Play");
-                const currentTime = document.getElementById("mediaElement").currentTime;
 
                 //  Create audio-related settings
                 //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -77,6 +76,8 @@ $song = array(
                 const arrayBuffer = await response.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
                 track = audioBuffer;
+
+                const currentTime = document.getElementById("mediaElement").currentTime;
 
                 if (audioCtx.state === "suspended") {
                     audioCtx.resume();
