@@ -53,6 +53,7 @@ $song = array(
         let track = null;
         let trackSource = null;
         let trackConnected = false;
+        let intervalListener = null;
         $(document).ready(async () => {
 
             $("#mediaElement").on("play", async () => {
@@ -99,6 +100,16 @@ $song = array(
                 } else {
                     trackSource.start();
                 }
+
+                if(intervalListener) {
+                    clearInterval(intervalListener);
+                    intervalListener = null;
+                }
+
+                intervalListener = window.setInterval(() => {
+                    console.log( currentTime + 1 )
+                    document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
+                }, 1000);
             });
 
             //  Fetch lyrics
