@@ -1,6 +1,19 @@
 $(document).ready(async () => {
 
-    $("#mediaElement").on("play", async () => {
+    $("input").on("mousedown", e => {
+        console.log(e);
+    });
+
+    const initAudio = async (at = undefined) => {
+        if (document.getElementById("play-button").dataset.playing === "true" && !at) {
+            if (audioCtx) {
+                audioCtx.suspend();
+                clearInterval(intervalListener);
+                document.getElementById("play-button").dataset.playing = false;
+                $("#play-button").attr("class", "fa fa-play");
+            }
+            return;
+        }
         //  Create audio-related settings
         //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -8,13 +21,7 @@ $(document).ready(async () => {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        mediaElement = document.getElementById("mediaElement");
-
-        if (!source) {
-            source = audioCtx.createMediaElementSource(mediaElement);
-        }
-
-        if( Object.keys(tracks).length === 0 ) {
+        if (Object.keys(tracks).length === 0) {
             for (let e of resources) {
 
                 const response = await fetch(e);
@@ -23,8 +30,6 @@ $(document).ready(async () => {
                 tracks[e] = audioBuffer;
             }
         }
-
-        const currentTime = document.getElementById("mediaElement").currentTime;
 
         for (let e of Object.keys(tracks)) {
             if (audioCtx.state === "suspended") {
@@ -41,8 +46,16 @@ $(document).ready(async () => {
                 buffer: tracks[e]
             });
 
+            $("#audioProgress").prop("min", 0);
+            $("#audioProgress").prop("max", buffers[e].buffer.duration);
+            $(".time .time-end").text("HEY");
+
             buffers[e].connect(audioCtx.destination);
             trackConnected = true;
+
+            const currentTime = at || buffers[e].context.currentTime;
+
+            $("#audioProgress").val(currentTime).trigger("timeupdate");
 
             if (currentTime > 0) {
                 buffers[e].start(0, currentTime);
@@ -56,17 +69,16 @@ $(document).ready(async () => {
             }
 
             intervalListener = window.setInterval(() => {
-                document.getElementById("mediaElement").currentTime = document.getElementById("mediaElement").currentTime + 1;
+                $("#audioProgress").val(buffers[e].context.currentTime).trigger("timeupdate");
             }, 1000);
         }
-    });
 
-    $("#mediaElement").on("pause", async () => {
-        if(audioCtx) {
-            audioCtx.suspend();
-            clearInterval(intervalListener);
-        }
-    });
+        document.getElementById("play-button").dataset.playing = true;
+        $("#play-button").attr("class", "fa fa-pause");
+    };
+
+    $("#play-button").on("click", async () => { await initAudio(); });
+    $("#audioProgress").on("change", async () => { await initAudio($("#audioProgress").val()); });
 
     //  Fetch lyrics
     let _data = await $.getJSON(lyricsURL);
@@ -74,7 +86,7 @@ $(document).ready(async () => {
     const align = () => {
         var a = $(".highlighted").height();
         var c = $(".content").height();
-        var d = $(".highlighted").offset().top - $(".highlighted").parent().offset().top;
+        var d = $(".highlighted").offset()?.top - $(".highlighted").parent().offset()?.top;
         var e = d + (a / 2) - (c / 2);
         $(".content").animate({
             scrollTop: e + "px"
@@ -107,9 +119,9 @@ $(document).ready(async () => {
 
     var lyricHeight = $(".lyrics").height();
 
-    $("video").on('timeupdate', function(e) {
-        var time = this.currentTime * 1000;
-        var past = _data["lyrics"].filter(function(item) {
+    $("#audioProgress").on('timeupdate', e => {
+        var time = $("#audioProgress").val() * 1000;
+        var past = _data["lyrics"].filter(function (item) {
             return item.time < time;
         });
         if (_data["lyrics"][past.length] != currentLine) {
@@ -120,7 +132,7 @@ $(document).ready(async () => {
         }
     });
 
-    $(window).on("resize", function() {
+    $(window).on("resize", function () {
         if ($(".lyrics").height() != lyricHeight) { //Either width changes so that a line may take up or use less vertical space or the window height changes, 2 in 1
             lyricHeight = $(".lyrics").height();
             align();

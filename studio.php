@@ -16,6 +16,7 @@ $song = array(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $song["title"] ?></title>
     <link rel="stylesheet/less" type="text/less" href="lab2.less" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -24,7 +25,6 @@ $song = array(
     </div>
 
     <div class="player">
-        <div class="left"></div>
         <div class="right">
             <div class="top">
                 <a class="song" href="">
@@ -35,9 +35,19 @@ $song = array(
                 </a>
             </div>
             <div class="bottom">
-                <video controls="" _autoplay="" name="media" id="mediaElement">
+                <!--<video controls="" _autoplay="" name="media" id="mediaElement">
                     <source src="<?= $song["tracks"][0] ?>" type="audio/mpeg">
-                </video>
+                </video>-->
+                <div class="audio-progress">
+                    <input id="audioProgress" type="range" min="0" value="0">
+                    <div class="time">
+                        <span class="time-current">00:00</span>
+                        <span class="time-end">10:00</span>        
+                    </div>
+                </div>
+                <div class="audio-actions">
+                    <i id="play-button" data-playing="false" class="fa fa-play"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -61,6 +71,12 @@ $song = array(
     </script>
 
     <script src="studio.js"></script>
+
+    <script>
+        $("#range").on("change", e => {
+            console.log( e.target.value );
+        });
+    </script>
 </body>
 
 </html>
