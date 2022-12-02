@@ -1,84 +1,128 @@
+class AudioManager {
+    HTMLElement = null;
+    audioBuffers = [];
+    audioContext = null;
+    activeBufferSourceNodes = [];
+    audioUpdateInterval = null;
+
+    async getAudioBufferFromURL(URL) {
+        if (URL) {
+            const response = await fetch(URL);
+            const arrayBuffer = await response.arrayBuffer();
+            return arrayBuffer;
+        } else {
+            throw new Error("URL for resource cannot be an empty string");
+        }
+    }
+
+    copyBuffer(original) {
+        const copy = new ArrayBuffer(original.byteLength);
+        new Uint8Array(copy).set(new Uint8Array(original));
+        return copy;
+    }
+
+    play(at = null, registerCallback = null) {
+        if (this.audioBuffers.length) {
+
+            if (!this.activeBufferSourceNodes.length || this.audioContext.state !== "suspended" || at) {
+
+                at = Number(at);
+
+                if (this.audioUpdateInterval) {
+                    clearInterval(this.audioUpdateInterval);
+                    this.audioUpdateInterval = null;
+                }
+
+                if (this.activeBufferSourceNodes.length) {
+                    this.activeBufferSourceNodes.forEach(audio => audio.stop());
+                    this.activeBufferSourceNodes = [];
+                }
+
+                this.audioContext = new AudioContext();
+
+                Promise.all(this.audioBuffers.map(buffer => this.audioContext.decodeAudioData(this.copyBuffer(buffer))))
+                    .then(buffers => {
+                        for (const buffer of buffers) {
+                            const sourceNode = new AudioBufferSourceNode(this.audioContext, { buffer });
+                            sourceNode.connect(this.audioContext.destination);
+
+                            if (at) {
+                                sourceNode.start(0, at);
+                            } else {
+                                sourceNode.start();
+                            }
+
+                            this.activeBufferSourceNodes.push(sourceNode);
+                        }
+
+                        $("#audioProgress").prop("max", this.activeBufferSourceNodes[0].buffer.duration);
+                        $(".time .time-current").text("TODO");
+                        $(".time .time-end").text("TODO");
+
+                        this.audioUpdateInterval = setInterval(() => {
+                            if (registerCallback && "function" === typeof registerCallback) {
+                                registerCallback(this.audioContext.currentTime + at);
+                            }
+                        }, 1000);
+                    });
+            } else {
+                this.audioContext.resume();
+            }
+
+            $("#play-button").data("playing", true);
+            $("#play-button").attr("class", "fa fa-pause");
+        }
+    }
+
+    pause() {
+        if (this.audioContext.state === "running") {
+            this.audioContext.suspend();
+            $("#play-button").data("playing", false);
+            $("#play-button").attr("class", "fa fa-play");
+        }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} element HTML Media Element to load audio from
+     * @returns 
+     */
+    constructor(trackURLs, callbackOnReady = null, element = null) {
+        /** This is executed everytime an instance is tried to perform  **/
+        /** This is executed everytime an instance is tried to perform  **/
+
+        //  An instance already exists (Singleton)
+        if (typeof AudioManager.instance === "object") {
+            return AudioManager.instance;
+        }
+
+        /** This is executed just on the first instance  **/
+        this.audioContext = new window.AudioContext();
+
+        //  Load all tracks and then notify ready state
+        Promise.all(trackURLs.map(e => this.getAudioBufferFromURL(e)))
+            .then(buffers => {
+                this.audioBuffers = buffers;
+
+                if (callbackOnReady && "function" === typeof callbackOnReady) {
+                    callbackOnReady();
+                }
+            })
+
+        //  An HTML Media Element was provided
+        if (element) {
+            //  TODO:   Handle loading Audio Context from <audio /> or media HTML Element
+        }
+
+        AudioManager.instance = this;
+        return this;
+        /** This is executed just on the first instance  **/
+    }
+}
+
 $(document).ready(async () => {
 
-    $("input").on("mousedown", e => {
-        console.log(e);
-    });
-
-    const initAudio = async (at = undefined) => {
-        if (document.getElementById("play-button").dataset.playing === "true" && !at) {
-            if (audioCtx) {
-                audioCtx.suspend();
-                clearInterval(intervalListener);
-                document.getElementById("play-button").dataset.playing = false;
-                $("#play-button").attr("class", "fa fa-play");
-            }
-            return;
-        }
-        //  Create audio-related settings
-        //const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        if (Object.keys(tracks).length === 0) {
-            for (let e of resources) {
-
-                const response = await fetch(e);
-                const arrayBuffer = await response.arrayBuffer();
-                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                tracks[e] = audioBuffer;
-            }
-        }
-
-        for (let e of Object.keys(tracks)) {
-            if (audioCtx.state === "suspended") {
-                audioCtx.resume();
-            }
-
-            if (buffers[e]) {
-                buffers[e].disconnect();
-                buffers[e].stop(0);
-                buffers[e] = null;
-            }
-
-            buffers[e] = new AudioBufferSourceNode(audioCtx, {
-                buffer: tracks[e]
-            });
-
-            $("#audioProgress").prop("min", 0);
-            $("#audioProgress").prop("max", buffers[e].buffer.duration);
-            $(".time .time-end").text("HEY");
-
-            buffers[e].connect(audioCtx.destination);
-            trackConnected = true;
-
-            const currentTime = at || buffers[e].context.currentTime;
-
-            $("#audioProgress").val(currentTime).trigger("timeupdate");
-
-            if (currentTime > 0) {
-                buffers[e].start(0, currentTime);
-            } else {
-                buffers[e].start();
-            }
-
-            if (intervalListener) {
-                clearInterval(intervalListener);
-                intervalListener = null;
-            }
-
-            intervalListener = window.setInterval(() => {
-                $("#audioProgress").val(buffers[e].context.currentTime).trigger("timeupdate");
-            }, 1000);
-        }
-
-        document.getElementById("play-button").dataset.playing = true;
-        $("#play-button").attr("class", "fa fa-pause");
-    };
-
-    $("#play-button").on("click", async () => { await initAudio(); });
-    $("#audioProgress").on("change", async () => { await initAudio($("#audioProgress").val()); });
+    const audioManager = new AudioManager(resources, () => { });
 
     //  Fetch lyrics
     let _data = await $.getJSON(lyricsURL);
@@ -119,8 +163,17 @@ $(document).ready(async () => {
 
     var lyricHeight = $(".lyrics").height();
 
-    $("#audioProgress").on('timeupdate', e => {
-        var time = $("#audioProgress").val() * 1000;
+    const updateBarTime = t => $("#audioProgress").val(t).trigger("timeupdate", [t])
+
+    $("#play-button").on("click", () => {
+        if (($("#play-button").data("playing")) === true) {
+            audioManager.pause();
+        } else {
+            audioManager.play(null, updateBarTime);
+        }
+    });
+
+    const updateLyrics = (time) => {
         var past = _data["lyrics"].filter(function (item) {
             return item.time < time;
         });
@@ -130,7 +183,24 @@ $(document).ready(async () => {
             $(`.lyrics div:nth-child(${past.length})`).addClass("highlighted"); //Text might take up more lines, do before realigning
             align();
         }
-    });
+    }
+
+    $("#audioProgress")
+        .on('timeupdate', (_, data) => {
+            var time = data * 1000;
+            var past = _data["lyrics"].filter(function (item) {
+                return item.time < time;
+            });
+            if (_data["lyrics"][past.length] != currentLine) {
+                currentLine = _data["lyrics"][past.length];
+                $(".lyrics div").removeClass("highlighted");
+                $(`.lyrics div:nth-child(${past.length})`).addClass("highlighted"); //Text might take up more lines, do before realigning
+                align();
+            }
+        })
+        .on("change", async () => { audioManager.play($("#audioProgress").val(), updateBarTime); })
+        .on("input", e => updateLyrics(e.target.value * 1000)); //  TODO:   Don't trigger lyric update when this event occurs
+        //  TODO:   Set range max value before user has to click on play...
 
     $(window).on("resize", function () {
         if ($(".lyrics").height() != lyricHeight) { //Either width changes so that a line may take up or use less vertical space or the window height changes, 2 in 1
