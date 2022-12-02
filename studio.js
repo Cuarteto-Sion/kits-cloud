@@ -5,6 +5,8 @@ class AudioManager {
     activeBufferSourceNodes = [];
     audioUpdateInterval = null;
 
+    static onKnowAudioLength = null;
+
     async getAudioBufferFromURL(URL) {
         if (URL) {
             const response = await fetch(URL);
@@ -55,7 +57,6 @@ class AudioManager {
                             this.activeBufferSourceNodes.push(sourceNode);
                         }
 
-                        $("#audioProgress").prop("max", this.activeBufferSourceNodes[0].buffer.duration);
                         $(".time .time-current").text("TODO");
                         $(".time .time-end").text("TODO");
 
@@ -104,6 +105,11 @@ class AudioManager {
             .then(buffers => {
                 this.audioBuffers = buffers;
 
+                if (AudioManager.onKnowAudioLength && "function" === typeof AudioManager.onKnowAudioLength) {
+                    Promise.all(buffers.map(b => this.audioContext.decodeAudioData(this.copyBuffer(b))))
+                        .then(e => { AudioManager.onKnowAudioLength(Math.max(...e.map(c => c.duration))) });
+                }
+
                 if (callbackOnReady && "function" === typeof callbackOnReady) {
                     callbackOnReady();
                 }
@@ -122,6 +128,7 @@ class AudioManager {
 
 $(document).ready(async () => {
 
+    AudioManager.onKnowAudioLength = (e) => $("#audioProgress").prop("max", e);
     const audioManager = new AudioManager(resources, () => { });
 
     //  Fetch lyrics
@@ -200,7 +207,6 @@ $(document).ready(async () => {
         })
         .on("change", async () => { audioManager.play($("#audioProgress").val(), updateBarTime); })
         .on("input", e => updateLyrics(e.target.value * 1000)); //  TODO:   Don't trigger lyric update when this event occurs
-        //  TODO:   Set range max value before user has to click on play...
 
     $(window).on("resize", function () {
         if ($(".lyrics").height() != lyricHeight) { //Either width changes so that a line may take up or use less vertical space or the window height changes, 2 in 1
