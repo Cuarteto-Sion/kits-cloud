@@ -47,8 +47,18 @@
             flex-grow: 0;
         }    
     }
+
+    a.card {
+        align-self: start;
+    }
+
+    .card-body .badge {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+    }
 </style>
-<div class="content container mt-3 pt-3">
+<div class="content container mt-3 mb-3 pt-3 pb-3">
     <?php if ($parent !== false) : ?>
         <a href="?p=<?php echo urlencode($parent) ?>" class="card">
             <div class="card-body"><p><i class="fa fa-chevron-circle-left go-back mr-3"></i>Volver</p></div>
@@ -57,9 +67,22 @@
     <?php
         foreach($folders as $f) {
             $img = $is_link ? 'icon-link_folder' : 'fa fa-folder-o';
+
+            $labels = array( );
+
+            foreach( array( "Obra en mi", "Cristo Cristo", "Como el ciervo", "El Color Rojo" ) as $song ) {
+                if( $song == $f ) array_push( $labels, "Presentación 30 de Marzo" );
+            }
     ?>
             <a href="?p=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>" class="card">
-                <div class="card-body"><p><i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?></p></div>
+                <div class="card-body">
+                    <p>
+                        <i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?>
+                        <?php if( sizeof( $labels ) > 0 ) : ?>
+                        <span class="badge rounded-pill text-bg-danger">30 de Marzo</span>
+                        <?php endif; ?>
+                    </p>
+                </div>
             </a>
     <?php
         }
