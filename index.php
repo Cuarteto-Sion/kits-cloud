@@ -1309,7 +1309,7 @@ if (isset($_GET['view'])) {
         <div class="col-12">
             <?php if (!$quickView) { ?>
                 <p class="break-word"><b><?php echo $view_title ?> "<?php echo fm_enc(fm_convert_win($file)) ?>"</b></p>
-                <p class="break-word">
+                <!-- <p class="break-word">
                     Full path: <?php echo fm_enc(fm_convert_win($file_path)) ?><br>
                     File size: <?php echo ($filesize_raw <= 1000) ? "$filesize_raw bytes" : $filesize; ?><br>
                     MIME-type: <?php echo $mime_type ?><br>
@@ -1349,7 +1349,7 @@ if (isset($_GET['view'])) {
                         echo 'Charset: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
                     }
                     ?>
-                </p>
+                </p> -->
                 <p>
                     <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;dl=<?php echo urlencode($file) ?>"><i class="fa fa-cloud-download"></i> <?php echo lng('Download') ?></a></b> &nbsp;
                     <b><a href="<?php echo fm_enc($file_url) ?>" target="_blank"><i class="fa fa-external-link-square"></i> <?php echo lng('Open') ?></a></b>
@@ -2562,9 +2562,9 @@ function fm_show_nav_path($path)
 ?>
     <nav class="navbar navbar-expand-lg <?php echo $getTheme; ?> mb-4 main-nav <?php echo $isStickyNavBar ?>">
         <a class="navbar-brand" href=""> <?php echo lng('AppTitle') ?> </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
             <?php
@@ -2588,7 +2588,7 @@ function fm_show_nav_path($path)
 
             <div class="col-xs-6 col-sm-7 text-right">
                 <ul class="navbar-nav mr-auto float-right <?php echo fm_get_theme();  ?>">
-                    <li class="nav-item mr-2">
+                    <!-- <li class="nav-item mr-2">
                         <div class="input-group input-group-sm mr-1" style="margin-top:4px;">
                             <input type="text" class="form-control" placeholder="<?php echo lng('Search') ?>" aria-label="<?php echo lng('Search') ?>" aria-describedby="search-addon2" id="search-addon">
                             <div class="input-group-append">
@@ -2601,14 +2601,14 @@ function fm_show_nav_path($path)
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> -->
                     <?php if (!FM_READONLY) : ?>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a title="<?php echo lng('Upload') ?>" class="nav-link" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;upload"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <?php echo lng('Upload') ?></a>
-                        </li>
-                        <li class="nav-item">
+                        </li> -->
+                        <!-- <li class="nav-item">
                             <a title="<?php echo lng('NewItem') ?>" class="nav-link" href="#createNewItem" data-toggle="modal" data-target="#createNewItem"><i class="fa fa-plus-square"></i> <?php echo lng('NewItem') ?></a>
-                        </li>
+                        </li> -->
                     <?php endif; ?>
                     <?php if (FM_USE_AUTH) : ?>
                         <li class="nav-item avatar dropdown">
@@ -2625,9 +2625,9 @@ function fm_show_nav_path($path)
                         </li>
                     <?php else : ?>
                         <?php if (!FM_READONLY) : ?>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a title="<?php echo lng('Settings') ?>" class="dropdown-item nav-link" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;settings=1"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo lng('Settings') ?></a>
-                            </li>
+                            </li> -->
                         <?php endif; ?>
                     <?php endif; ?>
                 </ul>
@@ -2848,6 +2848,7 @@ function fm_show_header_login()
 		gtag('config', 'UA-188045961-1');
 	</script>
         <meta charset="utf-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <?php foreach(array_keys($site_metadata) as $og_variable) { ?>
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
         <?php } ?>
@@ -4293,6 +4294,8 @@ function fm_show_header_login()
             </script>
         <?php endif; ?>
         <div id="snackbar"></div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/less" ></script>
     </body>
 
     </html>
