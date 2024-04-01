@@ -68,9 +68,17 @@
             $filelink = '?p=' . urlencode(FM_PATH) . '&amp;view=' . urlencode($f);
             $fileext = Utils\Files\get_file_extension($f);
             $file_url = FM_ROOT_URL . fm_convert_win((FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f);
+
+            $bg_color = null;
+
+            switch( $fileext ) {
+                case "mp3":
+                    $bg_color = "#B3E5FC";
+                    break;
+            }
     ?>
-        <a class="card" href="<?php echo $filelink ?>" title="<?php echo $f ?>">
-            <div class="card-body"><p><i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?></p></div>
+        <a class="card" href="<?= fm_enc($file_url) ?>" target="_blank" title="<?php echo $f ?>">
+            <div class="card-body" style="background-color: <?= $bg_color ?>;"><p><i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?></p></div>
         </a>
     <?php
         }
