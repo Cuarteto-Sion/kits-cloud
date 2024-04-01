@@ -1,9 +1,14 @@
 <?php
 $song = array(
-    "title" => "Arquitecto Divino",
-    "artist" => "Heraldos del Rey",
-    "lyrics" => "content/lyrics.json",
-    "tracks" => array("content/tenor2.mp3", "content/_221117124309.mp3")
+    "title" => "Obra en mi",
+    "artist" => "Prueba de Letra",
+    "lyrics" => "content/PUBLICADOS/.lyrics.json",
+    "tracks" => array(
+        "content/PUBLICADOS/Transformados/SOPRANO - Transformados_sesión.mp3",
+        "content/PUBLICADOS/Transformados/ALTO - Transformados_sesión.mp3",
+        "content/PUBLICADOS/Transformados/TENOR - Transformados_sesión.mp3",
+        "content/PUBLICADOS/Transformados/BASS - Transformados_sesión.mp3",
+    )
 );
 ?>
 
@@ -35,7 +40,7 @@ $song = array(
                 </a>
             </div>
             <div class="bottom">
-                <video controls="" _autoplay="" name="media" id="mediaElement">
+                <video controls name="media" id="mediaElement" playsinline>
                     <source src="<?= $song["tracks"][0] ?>" type="audio/mpeg">
                 </video>
             </div>

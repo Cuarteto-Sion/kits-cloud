@@ -72,16 +72,18 @@ $(document).ready(async () => {
     let _data = await $.getJSON(lyricsURL);
 
     const align = () => {
-        var a = $(".highlighted").height();
-        var c = $(".content").height();
-        var d = $(".highlighted").offset().top - $(".highlighted").parent().offset().top;
-        var e = d + (a / 2) - (c / 2);
-        $(".content").animate({
-            scrollTop: e + "px"
-        }, {
-            easing: "swing",
-            duration: 250
-        });
+        try {
+            var a = $(".highlighted").height();
+            var c = $(".content").height();
+            var d = $(".highlighted").offset().top - $(".highlighted").parent().offset().top;
+            var e = d + (a / 2) - (c / 2);
+            $(".content").animate({
+                scrollTop: e + "px"
+            }, {
+                easing: "swing",
+                duration: 250
+            });
+        } catch ( e ) { }
     };
 
     (function generate() {
@@ -110,10 +112,10 @@ $(document).ready(async () => {
     $("video").on('timeupdate', function(e) {
         var time = this.currentTime * 1000;
         var past = _data["lyrics"].filter(function(item) {
-            return item.time < time;
+            return ( item.time * 1000 == 0 ? 1000 : item.time * 1000 ) < time;
         });
-        if (_data["lyrics"][past.length] != currentLine) {
-            currentLine = _data["lyrics"][past.length];
+        if (_data["lyrics"][past.length - 1 ] != currentLine) {
+            currentLine = _data["lyrics"][past.length - 1];
             $(".lyrics div").removeClass("highlighted");
             $(`.lyrics div:nth-child(${past.length})`).addClass("highlighted"); //Text might take up more lines, do before realigning
             align();
