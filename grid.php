@@ -68,18 +68,27 @@
         foreach($folders as $f) {
             $img = $is_link ? 'icon-link_folder' : 'fa fa-folder-o';
 
-            $labels = array( );
+            $label = "";
 
-            foreach( array( "Obra en mi", "Cristo Cristo", "Como el ciervo", "El Color Rojo" ) as $song ) {
-                if( $song == $f ) array_push( $labels, "Presentación 30 de Marzo" );
+            $labelPattern = "/\-.*\-/i";
+
+            $regexMatch = null;
+
+            $hasLabels = preg_match( $labelPattern, $f, $regexMatch);
+
+            $customName = $f;
+
+            if( $hasLabels == 1 ) {
+                $label = preg_replace( "/\-/i", "", substr( $regexMatch[ 0 ], 0) );
+                $customName = preg_replace( $labelPattern, "", $f );
             }
     ?>
             <a href="?p=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>" class="card">
                 <div class="card-body">
                     <p>
-                        <i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $f ?>
-                        <?php if( sizeof( $labels ) > 0 ) : ?>
-                        <span class="badge rounded-pill text-bg-danger">30 de Marzo</span>
+                        <i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $customName ?>
+                        <?php if( isset( $label ) ) : ?>
+                        <span class="badge rounded-pill text-bg-danger"><?= $label ?></span>
                         <?php endif; ?>
                     </p>
                 </div>
