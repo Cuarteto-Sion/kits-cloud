@@ -2667,15 +2667,7 @@ function fm_show_header_login()
     <html lang="en">
 
     <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-188045961-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-  		function gtag(){dataLayer.push(arguments);}
-  		gtag('js', new Date());
-
-  		gtag('config', 'UA-188045961-1');
-	</script>
+        <?php echo get_analytics_tag( ); ?>
         <meta charset="utf-8">
         <?php foreach(array_keys($site_metadata) as $og_variable) { ?>
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
@@ -2838,15 +2830,7 @@ function fm_show_header_login()
     <html>
 
     <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-188045961-1"></script>
-	<script>
-  		window.dataLayer = window.dataLayer || [];
-	  	function gtag(){dataLayer.push(arguments);}
-  		gtag('js', new Date());
-
-		gtag('config', 'UA-188045961-1');
-	</script>
+        <?php echo get_analytics_tag( ); ?>
         <meta charset="utf-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <?php foreach(array_keys($site_metadata) as $og_variable) { ?>

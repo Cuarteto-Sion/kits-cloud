@@ -91,6 +91,9 @@ $GLOBALS["site_metadata"] = array_merge(
     )
 );
 
+//  Add multiline tag
+$GLOBALS["analytics_tag"] = "";
+
 // input encoding for iconv
 $GLOBALS["iconv_input_encoding"] = 'UTF-8';
 

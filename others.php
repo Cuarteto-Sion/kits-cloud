@@ -95,3 +95,9 @@ if ($ip_ruleset != 'OFF') {
         exit();
     }
 }
+
+function get_analytics_tag( ) {
+    $tag = $GLOBALS["analytics_tag"];
+
+    return $tag;
+}
