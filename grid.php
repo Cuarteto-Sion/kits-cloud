@@ -16,7 +16,7 @@
         cursor: default;
     }
 
-    .content .card:hover {
+    .content .card:hover, .card.disabled {
         background-color: #f0f0f0;
     }
 
@@ -71,19 +71,25 @@
             $label = "";
 
             $labelPattern = "/\-.*\-/i";
+            $attrPattern = "/\+\D/i";
 
             $regexMatch = null;
+            $regexMatch2 = null;
 
             $hasLabels = preg_match( $labelPattern, $f, $regexMatch);
+            $hasAttr = preg_match( $attrPattern, $f, $regexMatch2);
 
             $customName = $f;
 
-            if( $hasLabels == 1 ) {
+            if( $hasLabels == 1 || $hasAttr == 1 ) {
                 $label = preg_replace( "/\-/i", "", substr( $regexMatch[ 0 ], 0) );
                 $customName = preg_replace( $labelPattern, "", $f );
+                $customName = preg_replace( $attrPattern, "", $customName );
+
+                if( $hasAttr == 1 ) $img = 'fa fa-lock';
             }
     ?>
-            <a href="?p=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>" class="card">
+            <a  <?php echo $hasAttr ? '' : 'href="' . '?p=' . urlencode(trim(FM_PATH . '/' . $f, '/')) . '"' ?> class="card <?php echo $hasAttr ? 'disabled' : '' ?>">
                 <div class="card-body">
                     <p>
                         <i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $customName ?>
