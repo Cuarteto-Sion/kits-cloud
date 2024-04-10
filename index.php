@@ -1614,7 +1614,7 @@ if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
 }
 
 //--- FILEMANAGER MAIN
-fm_show_header(); // HEADER
+fm_show_header(FM_PATH); // HEADER
 fm_show_nav_path(FM_PATH); // current path
 
 // messages
@@ -2673,7 +2673,7 @@ function fm_show_header_login()
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
         <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
-        <title><?php echo fm_enc(APP_TITLE) ?></title>
+        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) : fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
         <style>
             body {
@@ -2815,7 +2815,7 @@ function fm_show_header_login()
     /**
      * Show Header after login
      */
-    function fm_show_header()
+    function fm_show_header($path)
     {
         $sprites_ver = '20160315';
         header("Content-Type: text/html; charset=utf-8");
@@ -2837,7 +2837,7 @@ function fm_show_header_login()
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
         <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
-        <title><?php echo fm_enc(APP_TITLE) ?></title>
+        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) : fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />

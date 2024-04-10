@@ -101,7 +101,6 @@ namespace Config {
             "author" => "Oliver Montalvan",
             "robots" => "noindex, nofollow",
             "googlebot" => "noindex",
-            "og:title" => $app_title,
             "og:description" => "Gestor de Kits de Ensayo",
             "og:image" => $login_image_path
         );
