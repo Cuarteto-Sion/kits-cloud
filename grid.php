@@ -20,6 +20,11 @@
         background-color: #f0f0f0;
     }
 
+    .card.disabled, .card.disabled:focus, .card.disabled:hover {
+        background-color: rgb(52,52,52);
+        color: white;
+    }
+
     .card-body > * {
         display: flex;
         align-self: center;
@@ -32,6 +37,11 @@
         text-overflow: ellipsis;
         display: block;
         overflow: hidden;
+    }
+
+    .text-bg-highlight {
+        background-color: #35363B;
+        color: #FDCB0A;
     }
 
     @media only screen and (max-width: 990px) {
@@ -94,7 +104,7 @@
                     <p>
                         <i style="font-size: 1.5em;" class="<?php echo $img ?> mr-3"></i><?= $customName ?>
                         <?php if( isset( $label ) ) : ?>
-                        <span class="badge rounded-pill text-bg-danger"><?= $label ?></span>
+                        <span class="badge rounded-pill text-bg-highlight"><?= $label ?></span>
                         <?php endif; ?>
                     </p>
                 </div>
