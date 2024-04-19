@@ -2673,7 +2673,7 @@ function fm_show_header_login()
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
         <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
-        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) : fm_enc(APP_TITLE) ?></title>
+        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) . ' | Kit' : fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
         <style>
             body {
