@@ -63,12 +63,12 @@ if ($use_auth) {
                                     <hr />
                                     <div class="form-group">
                                         <label for="fm_usr"><?php echo lng('Username'); ?></label>
-                                        <input type="text" class="form-control" id="fm_usr" name="fm_usr" required autofocus>
+                                        <input type="text" class="form-control" id="fm_usr" name="fm_usr" required autofocus autocorrect="off" autocapitalize="off">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="fm_pwd"><?php echo lng('Password'); ?></label>
-                                        <input type="password" class="form-control" id="fm_pwd" name="fm_pwd" required>
+                                        <input type="password" class="form-control" id="fm_pwd" name="fm_pwd" required autocomplete>
                                     </div>
 
                                     <div class="form-group">
