@@ -2675,20 +2675,48 @@ function fm_show_header_login()
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
         <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) . ' | Kit' : fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-        <style>
+        <style>            
+            button.btn-success {
+                background-color: #35363B !important;
+                border-color: #35363B !important;
+
+                color: #FDCB0A !important;
+                font-weight: bold;
+            }
+
+            button.btn-success:focus {
+                box-shadow: 0 0 0 .2rem rgba(253,203,10,.25);
+            }
+
+            .form-control:focus {
+                border-color: #FDCB0A !important;
+                box-shadow: 0 0 0 .2rem rgba(253,203,10,.25);
+            }
+
             body {
                 height: 100vh;
             }
             
             body .card.fat {
-                background-color: rgba(255, 255, 255, 0.5) !important;
+                background-color: rgba(255, 255, 255, 0.8) !important;
             }
             
             body.fm-login-page {
-                background-color: #f7f9fb;
+                /* background-color: #f7f9fb; */
                 font-size: 14px;
-                background-color: #f7f9fb;
-                background-image: url('');
+                /* background-color: #f7f9fb; */
+                /* background-image: url(''); */
+                background: rgb(52,52,52);
+                background: linear-gradient(90deg, rgba(52,52,52,1) 0%, rgba(0,0,0,1) 55%, rgba(52,52,52,1) 100%);
+            }
+
+            body.fm-logged {
+                /* background-color: #f7f9fb; */
+                font-size: 14px;
+                /* background-color: #f7f9fb; */
+                /* background-image: url(''); */
+                background: rgb(52,52,52);
+                background: linear-gradient(90deg, rgba(52,52,52,1) 0%, rgba(0,0,0,1) 55%, rgba(52,52,52,1) 100%);
             }
 
             .fm-login-page .brand {
@@ -2845,11 +2873,11 @@ function fm_show_header_login()
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/<?php echo FM_HIGHLIGHTJS_STYLE || "vs" ?>.min.css">
         <?php endif; ?>
         <style>
-            body {
+            /* body {
                 font-size: 14px;
                 background: #F7F7F7;
                 height: 100vh;
-            }
+            } */
 
             #bottom_actions * {
                 color: #ffffff !important;
@@ -2861,6 +2889,15 @@ function fm_show_header_login()
 
             body.navbar-fixed {
                 margin-top: 55px;
+            }
+
+            #navbarSupportedContent.show, #navbarSupportedContent.collapsing {
+                display: flex;
+            }
+
+            .dropdown-menu-right.show {
+                position: absolute;
+                padding: 1rem;
             }
 
             a:hover,
@@ -3435,6 +3472,11 @@ function fm_show_header_login()
 
             .c-preview-img {
                 max-width: 300px;
+            }
+
+            body.fm-logged {
+                background: rgb(52,52,52);
+                background: linear-gradient(90deg, rgba(52,52,52,1) 0%, rgba(0,0,0,1) 55%, rgba(52,52,52,1) 100%);
             }
         </style>
         <?php
