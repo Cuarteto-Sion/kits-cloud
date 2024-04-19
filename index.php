@@ -2865,7 +2865,7 @@ function fm_show_header_login()
             <meta name="<?= $og_variable ?>" content="<?= $site_metadata[$og_variable] ?>" />
         <?php } ?>
         <link rel="icon" href="<?php echo fm_enc($favicon_path) ?>" type="image/png">
-        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) : fm_enc(APP_TITLE) ?></title>
+        <title><?php echo ( !empty($_GET['p']) ) ? fm_enc(fm_clean_path($path)) . ' | Kit' : fm_enc(APP_TITLE) ?></title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
@@ -3521,7 +3521,7 @@ function fm_show_header_login()
         <?php endif; ?>
     </head>
 
-    <body class="<?php echo (FM_THEME == "dark") ? 'theme-dark' : ''; ?> <?php echo $isStickyNavBar; ?>">
+    <body class="<?php echo (FM_THEME == "dark") ? 'theme-dark' : ''; ?> fm-logged <?php echo $isStickyNavBar; ?>">
         <div id="wrapper" class="container-fluid">
 
             <!-- New Item creation -->
@@ -4450,7 +4450,7 @@ function fm_show_header_login()
         $tr['en']['Folder is empty']    = 'Folder is empty';
         $tr['en']['Check Latest Version'] = 'Check Latest Version';
         $tr['en']['Generate new password hash'] = 'Generate new password hash';
-        $tr['en']['You are logged in']    = 'You are logged in';
+        $tr['en']['You are logged in']    = 'Ha iniciado sesión';
         $tr['en']['Login failed. Invalid username or password'] = 'Login failed. Invalid username or password';
         $tr['en']['password_hash not supported, Upgrade PHP version'] = 'password_hash not supported, Upgrade PHP version';
 
